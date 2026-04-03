@@ -77,6 +77,11 @@ const menuItems = [
     href: '/student/ai-tutor',
   },
   {
+    label: 'AI Notes',
+    icon: Brain,
+    href: '/student/ai-notes',
+  },
+  {
     label: 'AI Mentor',
     icon: MessageCircle,
     href: '/student/ai-mentor',

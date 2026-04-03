@@ -130,7 +130,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/student", studentRoutes);
 app.use("/api/faculty", facultyRoutes);
 app.use("/api/parent", parentRoutes);
-app.use("/api", aiRoutes);
+app.use("/api/ai", aiRoutes);
 app.use("/api", examAssignmentRoutes);
 
 app.use("/api/courses", courseRoutes);
