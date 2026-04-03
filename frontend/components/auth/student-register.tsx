@@ -3,7 +3,7 @@
 import React from "react";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,9 +19,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { registerUser } from "@/lib/auth";
+import { useSubscription, SubscriptionPlanType } from "@/contexts/SubscriptionContext";
 
 export function StudentRegister() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { currentPlan } = useSubscription();
   const [step, setStep] = useState<"form" | "face">("form");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -86,6 +89,11 @@ export function StudentRegister() {
           <p className="text-muted-foreground">
             Start your learning journey with SkillifyAI
           </p>
+          <div className="inline-flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full">
+            <span className="text-xs font-semibold text-primary">
+              Plan: {currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1)}
+            </span>
+          </div>
         </div>
 
         {/* Registration Form */}

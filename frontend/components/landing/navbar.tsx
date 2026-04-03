@@ -37,7 +37,7 @@ export function Navbar() {
                 Login
               </Button>
             </Link>
-            <Link href="/role-select">
+            <Link href="/subscription">
               <Button size="sm" className="bg-primary hover:bg-primary/90">
                 Get Started
               </Button>

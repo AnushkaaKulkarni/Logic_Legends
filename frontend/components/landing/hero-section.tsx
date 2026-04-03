@@ -45,7 +45,7 @@ export function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/role-select">
+              <Link href="/subscription">
                 <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90">
                   Get Started
                 </Button>
