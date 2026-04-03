@@ -17,6 +17,7 @@ import {
   GraduationCap,
   MessageCircle,
   AlertCircle,
+  Code,
 } from 'lucide-react'
 
 const menuItems = [
@@ -29,6 +30,11 @@ const menuItems = [
     label: 'AI Quiz',
     icon: Brain,
     href: '/student/quiz',
+  },
+  {
+    label: 'Code Editor',
+    icon: Code,
+    href: '/student/code-editor',
   },
   {
     label: 'Exams',

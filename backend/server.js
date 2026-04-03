@@ -38,6 +38,7 @@ import facultyQuizAnalyticsRoutes from "./routes/facultyQuizAnalyticsRoutes.js";
 import classRoutes from "./routes/classRoutes.js";
 import facultyMaterialRoutes from "./routes/facultyMaterialRoutes.js";
 import semesterRoutes from "./routes/semesterRoutes.js";
+import codeEditorRoutes from "./routes/codeEditorRoutes.js";
 
 
 
@@ -149,6 +150,7 @@ app.use("/api/faculty/analytics", facultyQuizAnalyticsRoutes);
 app.use("/api/faculty/classes", classRoutes);
 app.use("/api/faculty/materials", facultyMaterialRoutes);
 app.use("/api/admin/semesters", semesterRoutes);
+app.use("/api/student/code-editor", codeEditorRoutes);
 
 
 app.use("/api/interviews", interviewRoutes);
