@@ -7,11 +7,12 @@ export const getStudentDashboard = async (req, res) => {
     const studentId = req.user._id;
 
     /* ================= EXAM ATTEMPTS ================= */
+    // Fetch all exam attempts that have scores (regardless of status)
     const examAttempts = await ExamAttempt.find({
       student: studentId,
-      status: { $in: ["SUBMITTED", "AUTO_SUBMITTED"] },
+      score: { $exists: true, $ne: null }
     })
-      .sort({ submittedAt: 1 })
+      .sort({ submittedAt: -1 }) // Sort by most recent first
       .populate("exam", "title subject");
 
     const totalQuizzes = examAttempts.length;
@@ -22,16 +23,19 @@ export const getStudentDashboard = async (req, res) => {
           totalQuizzes
         : 0;
 
-    const quizTrend = examAttempts.map((a, i) => ({
+    // Create trend data with most recent attempts first (reverse for chronological display)
+    const quizTrend = [...examAttempts].reverse().map((a, i) => ({
       attempt: i + 1,
       score: a.score || 0,
+      title: a.exam?.title,
+      date: a.submittedAt,
     }));
 
     /* ================= INTERVIEWS ================= */
     const interviews = await InterviewSession.find({
       student: studentId,
       status: "completed",
-    }).sort({ createdAt: 1 });
+    }).sort({ createdAt: -1 });
 
     const totalInterviews = interviews.length;
 
@@ -41,16 +45,18 @@ export const getStudentDashboard = async (req, res) => {
           totalInterviews
         : 0;
 
-    const interviewTrend = interviews.map((i, index) => ({
+    const interviewTrend = [...interviews].reverse().map((i, index) => ({
       attempt: index + 1,
       score: i.overallScore || 0,
+      subject: i.subject,
+      date: i.createdAt,
     }));
 
     /* ================= FACULTY ORALS ================= */
     const facultyOrals = await FacultyOralAttempt.find({
       student: studentId,
       status: "completed",
-    }).sort({ createdAt: 1 });
+    }).sort({ createdAt: -1 });
 
     const totalOrals = facultyOrals.length;
 
@@ -62,9 +68,10 @@ export const getStudentDashboard = async (req, res) => {
           ) / totalOrals
         : 0;
 
-    const oralTrend = facultyOrals.map((o, index) => ({
+    const oralTrend = [...facultyOrals].reverse().map((o, index) => ({
       attempt: index + 1,
       score: o.overallScore || 0,
+      date: o.createdAt,
     }));
 
     /* ================= SUBJECT PERFORMANCE ================= */
@@ -80,9 +87,11 @@ export const getStudentDashboard = async (req, res) => {
 
     const subjectPerformance = Object.keys(subjectMap).map((sub) => ({
       subject: sub,
-      score:
+      score: Math.round(
         subjectMap[sub].reduce((a, b) => a + b, 0) /
-        subjectMap[sub].length,
+        subjectMap[sub].length
+      ),
+      attempts: subjectMap[sub].length,
     }));
 
     /* ================= OVERALL ================= */
@@ -103,22 +112,22 @@ export const getStudentDashboard = async (req, res) => {
     const recentActivity = [
       ...examAttempts.map((a) => ({
         type: "Exam",
-        title: a.exam?.title,
-        subject: a.exam?.subject,
+        title: a.exam?.title || "Unknown Exam",
+        subject: a.exam?.subject || "General",
         score: a.score || 0,
-        date: a.submittedAt,
+        date: a.submittedAt || a.createdAt,
       })),
       ...interviews.map((i) => ({
         type: "Interview",
-        title: i.subject,
-        subject: i.type,
+        title: i.subject || "Interview",
+        subject: i.type || "Technical",
         score: i.overallScore || 0,
         date: i.createdAt,
       })),
       ...facultyOrals.map((o) => ({
         type: "Oral",
         title: "Faculty Oral",
-        subject: "Oral",
+        subject: "Oral Examination",
         score: o.overallScore || 0,
         date: o.createdAt,
       })),
