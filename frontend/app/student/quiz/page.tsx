@@ -10,6 +10,7 @@ export default function QuizPage() {
   const [scheduledQuizzes, setScheduledQuizzes] = useState<any[]>([])
   const [pastAttempts, setPastAttempts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState<'ALL' | 'CUSTOM' | 'SCHEDULED'>('ALL')
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : ''
 
   useEffect(() => {
@@ -56,6 +57,13 @@ export default function QuizPage() {
       fetchData()
     }
   }, [token])
+
+  const filteredAttempts = pastAttempts.filter(item => {
+    if (filter === 'ALL') return true;
+    if (filter === 'CUSTOM') return item.quizType === 'CUSTOM';
+    if (filter === 'SCHEDULED') return item.quizType === 'SCHEDULED';
+    return true;
+  });
 
   return (
     <div className="p-8 space-y-12">
@@ -121,65 +129,22 @@ export default function QuizPage() {
         </Card>
       </div>
 
-      {/* Scheduled Exams List */}
-      {/* <section className="space-y-6">
-        <h2 className="text-2xl font-semibold">
-          Upcoming Scheduled Exams
-        </h2>
-
-        {scheduledQuizzes.length > 0 ? (
-          scheduledQuizzes.map((quiz: any) => (
-            <Link
-              key={quiz._id}
-              href={`/student/quiz/take/${quiz._id}`}
-            >
-              <Card className="p-6 hover:shadow-lg cursor-pointer">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      {quiz.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {quiz.subject} • {quiz.faculty?.name}
-                    </p>
-
-                    <div className="flex gap-4 text-sm mt-2">
-                      <span className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        {new Date(
-                          quiz.scheduledAt
-                        ).toLocaleDateString()}
-                      </span>
-
-                      <span className="flex items-center gap-1">
-                        <Clock size={14} />
-                        {quiz.duration} mins
-                      </span>
-                    </div>
-                  </div>
-
-                  <Button className="gap-2">
-                    <Play size={16} />
-                    Start
-                  </Button>
-                </div>
-              </Card>
-            </Link>
-          ))
-        ) : (
-          <Card className="p-10 text-center text-muted-foreground">
-            No scheduled exams available
-          </Card>
-        )}
-      </section> */}
-
+      {/* Scheduled Exams List hidden as originally commented out */}
+      
       {/* Previous Attempts */}
       <section className="space-y-6">
-        <h2 className="text-2xl font-semibold">Previous Quiz Reports</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h2 className="text-2xl font-semibold">Previous Quiz Reports</h2>
+          <div className="flex items-center gap-2">
+            <Button variant={filter === 'ALL' ? 'default' : 'outline'} size="sm" onClick={() => setFilter('ALL')}>All</Button>
+            <Button variant={filter === 'CUSTOM' ? 'default' : 'outline'} size="sm" onClick={() => setFilter('CUSTOM')}>Custom AI</Button>
+            <Button variant={filter === 'SCHEDULED' ? 'default' : 'outline'} size="sm" onClick={() => setFilter('SCHEDULED')}>Scheduled</Button>
+          </div>
+        </div>
 
-        {pastAttempts.length > 0 ? (
+        {filteredAttempts.length > 0 ? (
           <div className="grid gap-4">
-            {pastAttempts.map((item: any) => {
+            {filteredAttempts.map((item: any) => {
               const percentage = item.score || 0;
               const displayScore = item.correctCount || 0;
               const displayTotal = item.totalQuestions || 0;
@@ -231,8 +196,8 @@ export default function QuizPage() {
         ) : (
           <Card className="p-8 text-center text-muted-foreground border-dashed">
             <FileText className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
-            <p className="text-base font-medium">No previous quiz reports yet</p>
-            <p className="text-sm mt-2">Your quiz attempts will appear here after you complete them</p>
+            <p className="text-base font-medium">No {filter !== 'ALL' ? (filter === 'CUSTOM' ? 'custom AI' : 'scheduled') : ''} previous quiz reports found.</p>
+            <p className="text-sm mt-2">Your quiz attempts will appear here after you complete them.</p>
           </Card>
         )}
       </section>

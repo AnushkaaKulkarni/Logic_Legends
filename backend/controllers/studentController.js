@@ -1,34 +1,56 @@
 import InterviewSession from "../models/Interview.js";
 import FacultyOralAttempt from "../models/FacultyOralAttempt.js";
 import ExamAttempt from "../models/ExamAttempt.js";
+import QuizAttempt from "../models/QuizAttempt.js";
 
 export const getStudentDashboard = async (req, res) => {
   try {
     const studentId = req.user._id;
 
-    /* ================= EXAM ATTEMPTS ================= */
-    // Fetch all exam attempts that have scores (regardless of status)
-    const examAttempts = await ExamAttempt.find({
+    /* ================= EXAM & QUIZ ATTEMPTS ================= */
+    // Fetch both formal exams and practice quizzes
+    const examAttemptsData = await ExamAttempt.find({
       student: studentId,
       score: { $exists: true, $ne: null }
-    })
-      .sort({ submittedAt: -1 }) // Sort by most recent first
-      .populate("exam", "title subject");
+    }).populate("exam", "title subject");
 
-    const totalQuizzes = examAttempts.length;
+    const quizAttemptsData = await QuizAttempt.find({
+      student: studentId,
+      isFinalized: true
+    });
+
+    // Merge and normalize both datasets
+    const combinedAttempts = [
+      ...examAttemptsData.map(a => ({
+        type: 'Exam',
+        score: a.score || 0,
+        title: a.exam?.title || "Formal Exam",
+        subject: a.exam?.subject || "General",
+        date: a.submittedAt || a.createdAt
+      })),
+      ...quizAttemptsData.map(q => ({
+        type: 'Quiz',
+        score: typeof q.score === 'number' ? q.score : 0,
+        title: q.quizType === 'CUSTOM' ? "Practice Quiz" : "Scheduled Quiz",
+        subject: q.subject || "General",
+        date: q.submittedAt || q.createdAt
+      }))
+    ].sort((a, b) => new Date(b.date) - new Date(a.date)); // Descending order
+
+    const totalQuizzes = combinedAttempts.length;
 
     const avgQuizScore =
       totalQuizzes > 0
-        ? examAttempts.reduce((sum, a) => sum + (a.score || 0), 0) /
-          totalQuizzes
+        ? combinedAttempts.reduce((sum, a) => sum + a.score, 0) / totalQuizzes
         : 0;
 
-    // Create trend data with most recent attempts first (reverse for chronological display)
-    const quizTrend = [...examAttempts].reverse().map((a, i) => ({
+    // Create trend data with most recent attempts first (reverse for chronological display left to right on chart)
+    const quizTrend = [...combinedAttempts].reverse().map((a, i) => ({
       attempt: i + 1,
       score: a.score || 0,
-      title: a.exam?.title,
-      date: a.submittedAt,
+      title: a.title,
+      subject: a.subject,
+      date: a.date,
     }));
 
     /* ================= INTERVIEWS ================= */
@@ -77,10 +99,8 @@ export const getStudentDashboard = async (req, res) => {
     /* ================= SUBJECT PERFORMANCE ================= */
     const subjectMap = {};
 
-    examAttempts.forEach((a) => {
-      const subject = a.exam?.subject;
-      if (!subject) return;
-
+    combinedAttempts.forEach((a) => {
+      const subject = a.subject;
       if (!subjectMap[subject]) subjectMap[subject] = [];
       subjectMap[subject].push(a.score || 0);
     });
@@ -88,20 +108,24 @@ export const getStudentDashboard = async (req, res) => {
     const subjectPerformance = Object.keys(subjectMap).map((sub) => ({
       subject: sub,
       score: Math.round(
-        subjectMap[sub].reduce((a, b) => a + b, 0) /
-        subjectMap[sub].length
+        subjectMap[sub].reduce((a, b) => a + b, 0) / subjectMap[sub].length
       ),
       attempts: subjectMap[sub].length,
     }));
 
     /* ================= OVERALL ================= */
-    const overallAverage =
-      (avgQuizScore + avgInterviewScore + avgOralScore) / 3;
+    // Only average the categories that actually have data
+    let categoriesWithData = 0;
+    let totalAverages = 0;
+
+    if (totalQuizzes > 0) { totalAverages += avgQuizScore; categoriesWithData++; }
+    if (totalInterviews > 0) { totalAverages += avgInterviewScore; categoriesWithData++; }
+    if (totalOrals > 0) { totalAverages += avgOralScore; categoriesWithData++; }
+
+    const overallAverage = categoriesWithData > 0 ? (totalAverages / categoriesWithData) : 0;
 
     /* ================= PASS RATE ================= */
-    const passedCount = examAttempts.filter(
-      (a) => (a.score || 0) >= 40
-    ).length;
+    const passedCount = combinedAttempts.filter((a) => a.score >= 40).length;
 
     const passRate =
       totalQuizzes > 0
@@ -110,12 +134,12 @@ export const getStudentDashboard = async (req, res) => {
 
     /* ================= RECENT ACTIVITY ================= */
     const recentActivity = [
-      ...examAttempts.map((a) => ({
-        type: "Exam",
-        title: a.exam?.title || "Unknown Exam",
-        subject: a.exam?.subject || "General",
-        score: a.score || 0,
-        date: a.submittedAt || a.createdAt,
+      ...combinedAttempts.map((a) => ({
+        type: a.type, // 'Exam' or 'Quiz'
+        title: a.title,
+        subject: a.subject,
+        score: a.score,
+        date: a.date,
       })),
       ...interviews.map((i) => ({
         type: "Interview",
@@ -145,7 +169,7 @@ export const getStudentDashboard = async (req, res) => {
       avgOralScore: Math.round(avgOralScore),
       overallAverage: Math.round(overallAverage),
       passRate,
-      streak: totalQuizzes, // simple streak logic
+      streak: totalQuizzes > 0 ? 1 : 0, // Simplified streak representation based on active exams
       quizTrend,
       interviewTrend,
       oralTrend,
@@ -157,3 +181,4 @@ export const getStudentDashboard = async (req, res) => {
     res.status(500).json({ message: "Dashboard error" });
   }
 };
+
