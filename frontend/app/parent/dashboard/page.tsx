@@ -113,56 +113,45 @@ export default function ParentDashboard() {
   }, [children, childrenProgress])
 
   /* ================= LINE CHART ================= */
-const progressData = useMemo(() => {
-  /**
-   * Structure:
-   * {
-   *   Jan: { month: 'Jan', Rahul: 70, Anaya: 82 },
-   *   Feb: { month: 'Feb', Rahul: 75, Anaya: 85 }
-   * }
-   */
-  const monthlyMap: Record<
-    string,
-    { month: string; [childName: string]: number }
-  > = {}
+  const progressData = useMemo(() => {
+    const monthlyMap: Record<string, Record<string, number>> = {}
 
-  children.forEach((child) => {
-    const progress = childrenProgress[child._id]
-    if (!progress?.recentAttempts) return
+    children.forEach((child) => {
+      const progress = childrenProgress[child._id]
+      if (!progress?.recentAttempts) return
 
-    // group attempts by month for THIS child
-    const byMonth: Record<string, number[]> = {}
+      // group attempts by month for THIS child
+      const byMonth: Record<string, number[]> = {}
 
-    progress.recentAttempts.forEach((a: any) => {
-      const month = new Date(a.submittedAt).toLocaleDateString('en', {
-        month: 'short',
+      progress.recentAttempts.forEach((a: any) => {
+        const month = new Date(a.submittedAt).toLocaleDateString('en', {
+          month: 'short',
+        })
+
+        if (!byMonth[month]) byMonth[month] = []
+        byMonth[month].push(a.score || 0)
       })
 
-      if (!byMonth[month]) byMonth[month] = []
-      byMonth[month].push(a.score || 0)
+      // calculate monthly average
+      Object.entries(byMonth).forEach(([month, scores]) => {
+        const avg =
+          scores.reduce((sum, s) => sum + s, 0) / scores.length
+
+        if (!monthlyMap[month]) {
+          monthlyMap[month] = {}
+        }
+
+        monthlyMap[month][child.fullName] = Math.round(avg)
+      })
     })
 
-    // calculate monthly average
-    Object.entries(byMonth).forEach(([month, scores]) => {
-      const avg =
-        scores.reduce((sum, s) => sum + s, 0) / scores.length
+    // sort months in calendar order and format for chart
+    const monthOrder = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
-      if (!monthlyMap[month]) {
-        monthlyMap[month] = { month }
-      }
-
-      monthlyMap[month][child.fullName] = Math.round(avg)
-    })
-  })
-
-  // sort months in calendar order
-  const monthOrder = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-
-  return Object.values(monthlyMap).sort(
-    (a, b) =>
-      monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month)
-  )
-}, [children, childrenProgress])
+    return Object.entries(monthlyMap)
+      .map(([month, data]) => ({ month, ...data }))
+      .sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month))
+  }, [children, childrenProgress])
 
   /* ================= BAR CHART ================= */
   const activityData = useMemo(() => {

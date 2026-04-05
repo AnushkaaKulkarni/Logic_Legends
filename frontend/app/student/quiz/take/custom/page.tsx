@@ -416,22 +416,6 @@ const updateAnswer = (idx: number) => {
 }
 
   /* ---------- FACE CHECK ---------- */
-
-  const handleFaceFrame = useCallback(
-    async ({ embedding }: { embedding: number[] }) => {
-      if (!attemptId || isSubmittingRef.current) return
-
-      // Throttle API calls to prevent overwhelming the server
-      const now = Date.now()
-      const lastCall = handleFaceFrame.lastCall || 0
-      if (now - lastCall < 3000) return // Minimum 3 seconds between calls
-      handleFaceFrame.lastCall = now
-
-      try {
-        const res = await fetch(
-          'http://localhost:5000/api/proctor/face-check',
-          {
-            method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,

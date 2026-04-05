@@ -400,13 +400,9 @@ export default function AINotesPage() {
                     <CardContent className="space-y-6">
                     {/* Render formatted content */}
                     <div className="prose max-w-none">
-                      {console.log('Rendering content for section:', section.heading)}
-                      {console.log('Content text:', section.content)}
-                      {console.log('Full section object:', section)}
                       {section.content ? (
                         section.content.split('\n').map((paragraph, pIndex) => {
                           const trimmed = paragraph.trim();
-                          console.log('Processing paragraph:', trimmed);
                           if (!trimmed) return null;
                         
                         // Handle bullet points
@@ -430,7 +426,7 @@ export default function AINotesPage() {
                         // Handle headers
                         if (trimmed.startsWith('#')) {
                           const level = trimmed.match(/^#+/)?.[0].length || 1;
-                          const Tag = `h${Math.min(level + 1, 6)}` as keyof JSX.IntrinsicElements;
+                          const Tag = `h${Math.min(level + 1, 6)}` as keyof React.JSX.IntrinsicElements;
                           return (
                             <Tag key={pIndex} className="font-bold mt-4 mb-2">
                               {trimmed.replace(/^#+\s/, '')}

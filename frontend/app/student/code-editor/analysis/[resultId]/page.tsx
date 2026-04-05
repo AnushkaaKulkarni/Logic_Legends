@@ -296,7 +296,7 @@ export default function CodeEditorAnalysisPage() {
 
         <TabsContent value="questions" className="space-y-6">
           <div className="space-y-4">
-            {analysis.questionAnalyses.map((question, index) => (
+            {analysis.questionAnalyses?.map((question, index) => (
               <Card key={question.questionId} className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>

@@ -128,13 +128,11 @@ export default function MarkSheetsPage(){
         fontStyle: 'bold',
         fontSize: 11,
         halign: 'center',
-        padding: 10
-      },
+      } as any,
       bodyStyles: {
         fontSize: 10,
         textColor: [40, 40, 40],
-        padding: 8
-      },
+      } as any,
       alternateRowStyles: {
         fillColor: [245, 245, 250]
       },

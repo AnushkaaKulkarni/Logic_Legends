@@ -64,8 +64,8 @@ export default function CodeEditorTestPage() {
   const [testStarted, setTestStarted] = useState(false)
   const [submissions, setSubmissions] = useState<Record<string, boolean>>({})
 
-  const timerRef = useRef<NodeJS.Timeout>()
-  const editorRef = useRef<any>()
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const editorRef = useRef<any>(null)
 
   const languages = [
     { value: 'cpp', label: 'C++', monaco: 'cpp' },
