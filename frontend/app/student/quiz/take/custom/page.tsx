@@ -416,36 +416,45 @@ const updateAnswer = (idx: number) => {
 }
 
   /* ---------- FACE CHECK ---------- */
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              attemptId,
-              embedding,
-              answers: answersRef.current,
-            }),
-          }
-        )
+const handleFaceFrame = useCallback(
+  async ({ embedding }: { embedding: number[] }) => {
+    if (!attemptId) return;
 
-        if (!res.ok) {
-          console.error('Face check API error:', res.status)
-          return
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/quiz/attempt/face-check`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            attemptId,
+            embedding,
+            answers: answersRef.current,
+          }),
         }
+      );
 
-        const data = await res.json()
-
-        if (data?.faceMismatch || embedding.length === 0) {
-          incrementWarning('Face not detected / mismatch')
-        }
-
-        if (data?.autoSubmitted) submit('PROCTOR_VIOLATION')
-      } catch (error) {
-        console.error('Face check error:', error)
+      if (!res.ok) {
+        console.error("Face check API error:", res.status);
+        return;
       }
-    },
-    [attemptId, token]
-  )
+
+      const data = await res.json();
+
+      if (data?.faceMismatch || embedding.length === 0) {
+        incrementWarning("Face not detected / mismatch");
+      }
+
+      if (data?.autoSubmitted) submit("PROCTOR_VIOLATION");
+    } catch (error) {
+      console.error("Face check error:", error);
+    }
+  },
+  [attemptId, token, incrementWarning, submit]
+);
 
   /* ---------- TIMER ---------- */
 

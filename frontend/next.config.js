@@ -5,8 +5,8 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   
-  // Turbopack configuration
-  turbopack: {},
+  // // Turbopack configuration
+  // turbopack: {},
   
   // Image optimization
   images: {
@@ -96,6 +96,20 @@ const nextConfig = {
   
   // Enable React strict mode in development
   reactStrictMode: true,
+  
+  // Webpack configuration to handle face-api.js issues
+  webpack: (config, { isServer }) => {
+    // Fix for face-api.js build issues
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        encoding: false,
+      }
+    }
+    
+    return config
+  },
 }
 
 module.exports = nextConfig
