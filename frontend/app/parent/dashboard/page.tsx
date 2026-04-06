@@ -49,7 +49,7 @@ export default function ParentDashboard() {
     const fetchDashboard = async () => {
       try {
         const res = await fetch(
-          'http://localhost:5000/api/parent/dashboard',
+          `${process.env.NEXT_PUBLIC_API_URL}/parent/dashboard`,
           { headers: { Authorization: `Bearer ${token}` } }
         )
         const childrenData = await res.json()
@@ -59,7 +59,7 @@ export default function ParentDashboard() {
           childrenData.map(async (child: any) => {
             try {
               const r = await fetch(
-                `http://localhost:5000/api/parent/child-progress/${child._id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/parent/child-progress/${child._id}`,
                 { headers: { Authorization: `Bearer ${token}` } }
               )
               const p = await r.json()

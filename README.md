@@ -19,14 +19,13 @@ Do NOT push `.env` files to GitHub.
 
 ### Frontend `.env`
 
-Create this file:
-
-frontend/.env
-Add:
+For Local Development:
 
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 
----
+For Production (Vercel):
+
+NEXT_PUBLIC_API_URL=https://logic-legends-d00z.onrender.com/api
 
 ### Backend `.env`
 

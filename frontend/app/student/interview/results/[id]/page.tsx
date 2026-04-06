@@ -20,8 +20,7 @@ import { Download } from "lucide-react";
 
 export default function InterviewResultsPage() {
   const { id } = useParams();
-  const API_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);

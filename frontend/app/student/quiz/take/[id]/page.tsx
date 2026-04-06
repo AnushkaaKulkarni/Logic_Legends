@@ -117,7 +117,7 @@ const lastFaceEventRef = useRef(0)
       console.log('Attempt ID:', attemptId)
       
       // For scheduled quizzes, use the exam submission endpoint
-      const res = await fetch(`http://localhost:5000/api/student/exams/attempts/${attemptId}/submit`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/exams/attempts/${attemptId}/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ const lastFaceEventRef = useRef(0)
   useEffect(() => {
     const start = async () => {
       const res = await fetch(
-        `http://localhost:5000/api/student/exams/scheduled/${examId}/start`,
+        `${process.env.NEXT_PUBLIC_API_URL}/student/exams/scheduled/${examId}/start`,
         { method: 'POST', headers: { Authorization: `Bearer ${token}` } }
       )
 
@@ -251,7 +251,7 @@ const lastFaceEventRef = useRef(0)
       restoringFullscreenRef.current = true
 
       const res = await fetch(
-        'http://localhost:5000/api/quiz/attempt/warning',
+        `${process.env.NEXT_PUBLIC_API_URL}/quiz/attempt/warning`,
         {
           method: 'PATCH',
           headers: {
@@ -330,7 +330,7 @@ const lastFaceEventRef = useRef(0)
   const onVisibility = async () => {
     if (document.hidden && !isSubmittingRef.current) {
       const res = await fetch(
-        'http://localhost:5000/api/quiz/attempt/warning',
+        `${process.env.NEXT_PUBLIC_API_URL}/quiz/attempt/warning`,
         {
           method: 'PATCH',
           headers: {
@@ -367,7 +367,7 @@ const onFaceFrame = useCallback(
 
     try {
       const res = await fetch(
-        'http://localhost:5000/api/proctor/face-check',
+        `${process.env.NEXT_PUBLIC_API_URL}/proctor/face-check`,
         {
           method: 'POST',
           headers: {

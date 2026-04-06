@@ -11,8 +11,7 @@ export default function InterviewSessionPage() {
   const router = useRouter();
   const { id } = useParams();
 
-  const API_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const [session, setSession] = useState<any>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

@@ -40,7 +40,7 @@ export default function FacultyDashboard() {
     const fetchDashboardData = async () => {
       try {
         const res = await fetch(
-          'http://localhost:5000/api/faculty/dashboard',
+          `${process.env.NEXT_PUBLIC_API_URL}/faculty/dashboard`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

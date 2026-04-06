@@ -38,7 +38,7 @@ export default function ChildProgressPage() {
     const fetchChildren = async () => {
       try {
         const res = await fetch(
-          'http://localhost:5000/api/parent/dashboard',
+          `${process.env.NEXT_PUBLIC_API_URL}/parent/dashboard`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }
@@ -68,7 +68,7 @@ export default function ChildProgressPage() {
     const fetchChildProgress = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/parent/child-progress/${selectedChild}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/parent/child-progress/${selectedChild}`,
           {
             headers: { Authorization: `Bearer ${token}` }
           }

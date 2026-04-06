@@ -139,7 +139,7 @@ export default function QuizTakePage() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/quiz/submit', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quiz/submit`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -179,7 +179,7 @@ export default function QuizTakePage() {
 
   useEffect(() => {
     const start = async () => {
-      const res = await fetch('http://localhost:5000/api/quiz/generate', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quiz/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ export default function QuizTakePage() {
       }))
 
       const attemptRes = await fetch(
-        'http://localhost:5000/api/quiz/attempt/start',
+        `${process.env.NEXT_PUBLIC_API_URL}/quiz/attempt/start`,
         {
           method: 'POST',
           headers: {
@@ -268,7 +268,7 @@ useEffect(() => {
       
       try {
         const res = await fetch(
-          'http://localhost:5000/api/quiz/attempt/warning',
+          `${process.env.NEXT_PUBLIC_API_URL}/quiz/attempt/warning`,
           {
             method: 'PATCH',
             headers: {
@@ -350,7 +350,7 @@ useEffect(() => {
         
         try {
           const res = await fetch(
-            'http://localhost:5000/api/quiz/attempt/warning',
+            `${process.env.NEXT_PUBLIC_API_URL}/quiz/attempt/warning`,
             {
               method: 'PATCH',
               headers: {

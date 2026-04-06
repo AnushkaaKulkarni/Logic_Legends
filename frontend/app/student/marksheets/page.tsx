@@ -14,14 +14,14 @@ export default function MarkSheetsPage(){
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : ''
 
   useEffect(()=>{
-    fetch('http://localhost:5000/api/student/semesters', { headers: { Authorization: `Bearer ${token}` }})
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/semesters`, { headers: { Authorization: `Bearer ${token}` }})
       .then(r=>r.json()).then(d=>setSemesters(d)).catch(()=>setSemesters([]))
   }, [])
 
   const fetchMarksheet = async () => {
     if(!selectedSemester) return alert('Select semester')
     try{
-      const res = await fetch(`http://localhost:5000/api/student/marksheets/${selectedSemester}`, { headers: { Authorization: `Bearer ${token}` }})
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/marksheets/${selectedSemester}`, { headers: { Authorization: `Bearer ${token}` }})
       if(!res.ok) throw new Error('fail')
       const d = await res.json()
       // ALWAYS prefer server-provided aggregated summary - this prevents duplicates
@@ -56,7 +56,7 @@ export default function MarkSheetsPage(){
     let studentName = 'Student'
     
     try {
-      const userRes = await fetch('http://localhost:5000/api/auth/profile', {
+      const userRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (userRes.ok) {

@@ -22,7 +22,7 @@ export default function AdminDashboard() {
 
   const fetchSemesters = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/semesters/list', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/semesters/list`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
       setFaculties(sem?.faculty || [])
 
       // also fetch results to compute simple metrics
-      const res = await fetch(`http://localhost:5000/api/admin/semesters/${id}/results`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/semesters/${id}/results`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (res.ok) {

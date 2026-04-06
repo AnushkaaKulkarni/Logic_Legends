@@ -17,7 +17,7 @@ export default function QuizPage() {
     const fetchData = async () => {
       try {
         // Fetch scheduled exams
-        const scheduledRes = await fetch('http://localhost:5000/api/student/exams/scheduled', {
+        const scheduledRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/exams/scheduled`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -33,7 +33,7 @@ export default function QuizPage() {
       try {
         // Fetch past quiz attempts
         console.log('Fetching past attempts with token:', token ? 'present' : 'missing')
-        const pastRes = await fetch('http://localhost:5000/api/quiz/result/list', {
+        const pastRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quiz/result/list`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         console.log('Past attempts response status:', pastRes.status)

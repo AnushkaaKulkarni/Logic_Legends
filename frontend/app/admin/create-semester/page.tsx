@@ -24,7 +24,7 @@ export default function CreateSemesterPage() {
 
   const fetchSemesters = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/semesters/list', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/semesters/list`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
@@ -43,7 +43,7 @@ export default function CreateSemesterPage() {
     setError('')
     setSuccess('')
     try {
-      const res = await fetch('http://localhost:5000/api/admin/semesters/create', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/semesters/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export default function CreateSemesterPage() {
       const fd = new FormData()
       fd.append('file', file)
       const res = await fetch(
-        `http://localhost:5000/api/admin/semesters/${selectedSemester}/assign-faculty-excel`,
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/semesters/${selectedSemester}/assign-faculty-excel`,
         {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },

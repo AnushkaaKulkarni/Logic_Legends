@@ -33,7 +33,7 @@ export default function ScheduledQuizzesPage() {
   const fetchExams = async () => {
     try {
       const res = await fetch(
-        'http://localhost:5000/api/student/exams/scheduled',
+        `${process.env.NEXT_PUBLIC_API_URL}/student/exams/scheduled`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,

@@ -79,7 +79,7 @@ const [selectedSemester, setSelectedSemester] = useState<string>('')
     formData.append("totalQuestions", String(totalQuestions));
     formData.append("duration", String(duration));
 
-    console.log("🚀 Sending request to:", "http://localhost:5000/api/faculty/exams/create");
+    console.log("🚀 Sending request to:", `${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/create`);
     console.log("📤 Form data contents:");
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
@@ -87,14 +87,14 @@ const [selectedSemester, setSelectedSemester] = useState<string>('')
 
     // Test simple request first
     try {
-      const testRes = await fetch("http://localhost:5000/api/faculty/exams/test");
+      const testRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/test`);
       console.log("🧪 Backend test response:", await testRes.json());
     } catch (testErr) {
       console.error("❌ Backend test failed:", testErr);
     }
 
     const res = await fetch(
-      "http://localhost:5000/api/faculty/exams/create",
+      `${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/create`,
       {
         method: "POST",
         headers: {
@@ -140,7 +140,7 @@ const [selectedSemester, setSelectedSemester] = useState<string>('')
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/faculty/exams/${examId}/question/${editingQuestion.questionId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/${examId}/question/${editingQuestion.questionId}`,
       {
         method: 'PATCH',
         headers: {
@@ -173,7 +173,7 @@ const [selectedSemester, setSelectedSemester] = useState<string>('')
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/faculty/exams/${examId}/question/${questionId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/${examId}/question/${questionId}`,
       {
         method: 'DELETE',
         headers: {
@@ -205,7 +205,7 @@ const handleApproveExam = async () => {
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/faculty/exams/${examId}/approve`,
+      `${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/${examId}/approve`,
       {
         method: "PATCH",
         headers: {
@@ -229,7 +229,7 @@ const handleScheduleExam = async () => {
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/faculty/exams/${examId}/schedule`,
+      `${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/${examId}/schedule`,
       {
         method: "PATCH",
         headers: {
@@ -255,7 +255,7 @@ const handleScheduleExam = async () => {
 const fetchStudents = async () => {
   try {
     const res = await fetch(
-      "http://localhost:5000/api/faculty/students",
+      `${process.env.NEXT_PUBLIC_API_URL}/faculty/students`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -273,7 +273,7 @@ const fetchStudents = async () => {
 const fetchClasses = async () => {
   try {
     const res = await fetch(
-      "http://localhost:5000/api/faculty/classes",
+      `${process.env.NEXT_PUBLIC_API_URL}/faculty/classes`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -303,7 +303,7 @@ const handleAssignStudents = async () => {
     }
 
     await fetch(
-      `http://localhost:5000/api/faculty/exams/${examId}/assign`,
+      `${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/${examId}/assign`,
       {
         method: "PATCH",
         headers: {
@@ -666,7 +666,7 @@ const handleAssignStudents = async () => {
                 onClick={async () => {
                   // fetch semesters assigned to this faculty
                   try {
-                    const res = await fetch('http://localhost:5000/api/admin/semesters/for-faculty', {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/semesters/for-faculty`, {
                       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
                     })
                     if (res.ok) {
@@ -869,7 +869,7 @@ const handleAssignStudents = async () => {
           // require class when assigning to semester
           if (!selectedClass) return alert('Please select a class when assigning to a semester')
           try {
-            const res = await fetch(`http://localhost:5000/api/faculty/exams/${examId}/assign-to-semester`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/faculty/exams/${examId}/assign-to-semester`, {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
               body: JSON.stringify({ semesterId: selectedSemester, assignedClass: selectedClass })

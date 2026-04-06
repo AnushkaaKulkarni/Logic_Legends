@@ -33,7 +33,7 @@ export default function QuizResultsPage() {
 
     const fetchResult = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/quiz/result/${attemptId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quiz/result/${attemptId}`, {
           headers: { Authorization: `Bearer ${getToken()}` },
         })
         

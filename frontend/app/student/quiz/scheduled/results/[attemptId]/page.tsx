@@ -38,7 +38,7 @@ export default function QuizScheduledResultsPage() {
         console.log('Fetching scheduled quiz result for attemptId:', attemptId)
         // For scheduled quizzes, use the exam results endpoint
         const res = await fetch(
-          `http://localhost:5000/api/student/exams/attempts/${attemptId}/result`,
+          `${process.env.NEXT_PUBLIC_API_URL}/student/exams/attempts/${attemptId}/result`,
           {
             headers: {
               Authorization: `Bearer ${getToken()}`,

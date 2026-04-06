@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import API from "@/lib/api";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface Faculty {
   _id: string;

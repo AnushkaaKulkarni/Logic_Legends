@@ -13,14 +13,14 @@ export default function ExamsPage(){
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : ''
 
   useEffect(()=>{
-    fetch('http://localhost:5000/api/student/semesters', { headers: { Authorization: `Bearer ${token}` }})
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/semesters`, { headers: { Authorization: `Bearer ${token}` }})
       .then(r=>r.json()).then(d=>setSemesters(d)).catch(()=>setSemesters([]))
   }, [])
 
   const fetchExams = async () => {
     if(!selectedSemester) return alert('Select semester')
     try{
-      const res = await fetch(`http://localhost:5000/api/student/exams/scheduled?semester=${selectedSemester}`, { headers: { Authorization: `Bearer ${token}` }})
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/exams/scheduled?semester=${selectedSemester}`, { headers: { Authorization: `Bearer ${token}` }})
       const d = await res.json()
       setExams(d)
     }catch(err){ alert('Failed to fetch exams') }

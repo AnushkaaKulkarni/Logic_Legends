@@ -51,7 +51,7 @@ export default function AINotesPage() {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/ai/generate-notes", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ai/generate-notes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +104,7 @@ export default function AINotesPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/ai/download/${noteId}/pdf`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ai/download/${noteId}/pdf`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

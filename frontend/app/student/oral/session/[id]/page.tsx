@@ -15,8 +15,7 @@ export default function OralSessionPage() {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
 
-  const API_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const [session, setSession] = useState<any>(null);
   const [timeRemaining, setTimeRemaining] = useState(0);

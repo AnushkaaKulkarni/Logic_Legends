@@ -67,7 +67,7 @@ export default function QuizAttemptReviewPage() {
     return ''
   }
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+  const API_URL = process.env.NEXT_PUBLIC_API_URL
 
   useEffect(() => {
     const fetchAttemptDetails = async () => {

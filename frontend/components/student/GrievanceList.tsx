@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios";
 import API from "@/lib/api";
 import { io, Socket } from "socket.io-client";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface AIAnalysis {
   isValid: boolean;
