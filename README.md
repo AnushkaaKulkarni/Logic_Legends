@@ -23,10 +23,6 @@ For Local Development:
 
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 
-For Production (Vercel):
-
-NEXT_PUBLIC_API_URL=https://logic-legends-d00z.onrender.com/api
-
 ### Backend `.env`
 
 Create this file:
