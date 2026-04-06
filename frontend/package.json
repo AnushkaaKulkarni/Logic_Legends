@@ -8,13 +8,12 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/build.js && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "preview": "next build && next start",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf .next out dist",
-    "prebuild": "node scripts/build.js"
+    "clean": "rm -rf .next out dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
